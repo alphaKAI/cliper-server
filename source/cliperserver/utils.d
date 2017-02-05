@@ -1,10 +1,12 @@
+module cliperserver.utils;
+import vibe.utils.dictionarylist;
 import mongoschema;
 import std.typecons,
         std.format,
         std.range;
 import vibe.d;
 
-void return_success(T)(HTTPServerResponse res, T payload, int status = 0) {
+void return_success(T)(HTTPServerResponse res, T payload) {
   res.writeBody(payload.serializeToJson.toString, "application/json");
 }
 
@@ -12,6 +14,11 @@ void return_success(HTTPServerResponse res, int status = 0) {
   CustomStruct!(int, "status") resp;
   resp.status = status;
   res.writeBody(resp.serializeToJson.toString, "application/json");
+}
+
+void return_error(T)(HTTPServerResponse res, T payload) {
+  res.statusCode = 400;
+  res.writeBody(payload.serializeToJson.toString, "application/json");
 }
 
 void return_error(HTTPServerResponse res, int errno, int status = 1) {
@@ -67,4 +74,14 @@ struct CustomStruct(Members...) {
 struct Response(T, string name) {
   mixin(generateDeclarations!(int, "status"));
   mixin("T " ~ name ~ ";");
+}
+
+bool header_has_all_keys(DictionaryList!(string,false,12L,false) headers, string[] keys) {
+  foreach (key; keys) {
+    if (key !in headers) {
+      return false;
+    }
+  }
+
+  return true;
 }

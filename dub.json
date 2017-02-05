@@ -10,6 +10,9 @@
 	"description": "Server of Cliper",
 	"copyright": "Copyright (c) 2017, Akihiro Shoji",
 	"license": "MIT",
+	"versions": [
+		"VibeDefaultMain"
+	],
   "preGenerateCommands": ["bash getLatestCommitHash.sh"],
   "dflags":["-J."]
 }
