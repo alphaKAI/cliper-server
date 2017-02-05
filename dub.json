@@ -1,0 +1,15 @@
+{
+	"name": "cliper-server",
+	"authors": [
+		"Akihiro Shoji"
+	],
+	"dependencies": {
+		"vibe-d": "~>0.7.30",
+		"mongoschemad": "~>2.3.0"
+	},
+	"description": "Server of Cliper",
+	"copyright": "Copyright (c) 2017, Akihiro Shoji",
+	"license": "MIT",
+  "preGenerateCommands": ["bash getLatestCommitHash.sh"],
+  "dflags":["-J."]
+}
