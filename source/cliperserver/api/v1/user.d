@@ -11,6 +11,10 @@ void api_v1_post_users(HTTPServerRequest req, HTTPServerResponse res) {
   auto user     = registerUser;
   string apikey = user.apikey;
 
+  if (!exists("users")) {
+    mkdir("users");
+  }
+
   mkdir("users/" ~ apikey);
 
   Response!(string, "apikey") resp;
