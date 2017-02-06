@@ -4,9 +4,12 @@ import cliperserver.schema.v1.buffer,
 import cliperserver.utils;
 import mongoschema;
 import vibe.d;
-import std.stdio,
-       std.zlib,
-       std.uuid;
+import std.digest.sha,
+       std.stdio,
+       std.conv,
+       std.file,
+       std.uuid,
+       std.zlib;
 
 /*
 # [POST] /buffers
@@ -42,11 +45,14 @@ void api_v1_post_buffers(HTTPServerRequest req, HTTPServerResponse res) {
         buf.length = req.bodyReader.leastSize;
         req.bodyReader.read(buf);
 
-        string stuff_path = "users/" ~ apikey ~ "/" ~ randomUUID.toString;
-        auto file = File(stuff_path, "wb");
-        file.rawWrite(buf);
-        auto buffer = registerBuffer(apikey, stuff_path);
+        string stuff_path = "users/" ~ apikey ~ "/" ~ sha1Of(buf).toHexString.to!string;
 
+        if (!exists(stuff_path)) {
+          auto file = File(stuff_path, "wb");
+          file.rawWrite(buf);
+        }
+
+        auto buffer = registerBuffer(apikey, stuff_path);
         user.current_buffer_id = buffer.buffer_id;
         user.save;
 
