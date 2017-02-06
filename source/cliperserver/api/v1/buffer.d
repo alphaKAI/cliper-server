@@ -45,7 +45,7 @@ void api_v1_post_buffers(HTTPServerRequest req, HTTPServerResponse res) {
         buf.length = req.bodyReader.leastSize;
         req.bodyReader.read(buf);
 
-        string stuff_path = "users/" ~ apikey ~ "/" ~ sha1Of(buf).toHexString.to!string;
+        string stuff_path = "users/" ~ apikey ~ "/" ~ cast(string)sha1Of(buf).toHexString;
 
         if (!exists(stuff_path)) {
           auto file = File(stuff_path, "wb");
