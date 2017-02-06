@@ -19,7 +19,13 @@ shared static this () {
   settings.port = 3017;
   settings.accessLogToConsole = true;
 
-  auto client = connectMongoDB("localhost");
+  immutable string CLIPER_SERVER_MONGO_DSN = environment.get("CLIPER_SERVER_MONGO_DSN");
+  if (CLIPER_SERVER_MONGO_DSN is null) {
+    throw new Error("Please set $CLIPER_SERVER_MONGO_DSN in environment variable.");
+  }
+
+  auto client = connectMongoDB(CLIPER_SERVER_MONGO_DSN);
+
   client.getCollection("cliperserver.users").register!User;
   client.getCollection("cliperserver.buffers").register!Buffer;
   auto router = new URLRouter;
